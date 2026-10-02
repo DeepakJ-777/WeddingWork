@@ -1,0 +1,13 @@
+name = "wedding-invite"
+main = "server/src/worker.ts"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "./client/dist"
+binding = "ASSETS"
+
+# Environment variables bound to worker
+# Sensitive secrets (DATABASE_URL, BETTER_AUTH_SECRET, GOOGLE_CLIENT_SECRET) should be set via `wrangler secret put <KEY>`
+[vars]
+ENVIRONMENT = "production"
