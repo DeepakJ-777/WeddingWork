@@ -2,7 +2,7 @@
 import { useLenis } from "../composables/useLenis.js";
 import WeddingHero from "../components/wedding/WeddingHero.vue";
 import BetrothalCountdown from "../components/wedding/BetrothalCountdown.vue";
-import BetrothalStory from "../components/wedding/BetrothalStory.vue";
+import BetrothalPhotoFlow from "../components/wedding/BetrothalPhotoFlow.vue";
 import BetrothalDetails from "../components/wedding/BetrothalDetails.vue";
 import BetrothalRSVP from "../components/wedding/BetrothalRSVP.vue";
 import BetrothalFinal from "../components/wedding/BetrothalFinal.vue";
@@ -10,54 +10,59 @@ import BetrothalFinal from "../components/wedding/BetrothalFinal.vue";
 // Initialize Lenis smooth scroll synchronized with GSAP ScrollTrigger
 useLenis();
 
-const betrothalData = {
+const betrothalConfig = {
   brideName: "DIVYA",
   groomName: "JOHN",
   eventType: "betrothal" as const,
   eventDate: "18 DECEMBER 2026",
   subtitle: "TOGETHER WITH THEIR FAMILIES",
-  heroImage: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=2400&q=85",
+  // The first image the user sees: beach.jpg (optimized)
+  heroImage: "/photos/beach-opt.webp",
+  // The final emotional close-up portrait: final.jpg (optimized)
+  finalImage: "/photos/final-opt.webp",
 };
 </script>
 
 <template>
-  <main class="betrothal-invite-flow">
-    <!-- 1. CINEMATIC HERO (Pinned viewport with zoom & text lift) -->
+  <main class="betrothal-story-page">
+    <!-- 1. HERO (First image: beach.jpg) -->
     <WeddingHero
-      :bride-name="betrothalData.brideName"
-      :groom-name="betrothalData.groomName"
-      :event-type="betrothalData.eventType"
-      :event-date="betrothalData.eventDate"
-      :hero-image="betrothalData.heroImage"
-      :subtitle="betrothalData.subtitle"
+      :bride-name="betrothalConfig.brideName"
+      :groom-name="betrothalConfig.groomName"
+      :event-type="betrothalConfig.eventType"
+      :event-date="betrothalConfig.eventDate"
+      :hero-image="betrothalConfig.heroImage"
+      :subtitle="betrothalConfig.subtitle"
     />
 
-    <!-- 2. COUNTDOWN -->
+    <!-- 2. THE COUNTDOWN -->
     <BetrothalCountdown
       target-date="2026-12-18"
       target-time="18:00"
     />
 
-    <!-- 3. OUR STORY / PHOTO EXPERIENCE (Kinetic marquee + Pinned horizontal scroll) -->
-    <BetrothalStory />
+    <!-- 3 & 4. US — A NEW BEGINNING & EDITORIAL PHOTO FLOW -->
+    <!-- [PHOTO] [PHOTO] -> [PHOTO] -> [PHOTO] [PHOTO] -> [PHOTO] -->
+    <BetrothalPhotoFlow />
 
-    <!-- 4. BETROTHAL EVENT & LOCATION (Date, Time, Venue, Google Maps & Calendar) -->
+    <!-- 5 & 6. THE BETROTHAL & LOCATION (Details, Google Maps, Add to Calendar) -->
     <BetrothalDetails />
 
-    <!-- 5. EVENTIFY RSVP FLOW (Name, Attending Yes/No, Guest counter, Confirmation) -->
+    <!-- 7. WILL YOU JOIN US? (Eventify RSVP Flow) -->
     <BetrothalRSVP />
 
-    <!-- 6. FINAL SERENE BENEDICTION -->
+    <!-- 8. FINAL SECTION (DIVYA & JOHN — WE'D LOVE TO HAVE YOU WITH US — final.jpg) -->
     <BetrothalFinal
-      :bride-name="betrothalData.brideName"
-      :groom-name="betrothalData.groomName"
+      :bride-name="betrothalConfig.brideName"
+      :groom-name="betrothalConfig.groomName"
       event-date="18 · 12 · 2026"
+      :final-image="betrothalConfig.finalImage"
     />
   </main>
 </template>
 
 <style scoped>
-.betrothal-invite-flow {
+.betrothal-story-page {
   position: relative;
   background-color: var(--ivory);
   width: 100vw;

@@ -10,18 +10,18 @@ withDefaults(defineProps<Props>(), {
   brideName: "DIVYA",
   groomName: "JOHN",
   eventDate: "18 · 12 · 2026",
-  finalImage: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1600&q=85",
+  finalImage: "/photos/final-opt.webp",
 });
 </script>
 
 <template>
   <footer class="final-section">
-    <!-- Atmospheric Background Image with High-Key Dark/Warm Overlay -->
+    <!-- Close-up Emotional Portrait (final.jpg) with Atmospheric Overlay -->
     <div
       class="final-bg"
       :style="{ backgroundImage: `url(${finalImage})` }"
       role="img"
-      aria-label="Couple portrait"
+      :aria-label="`${brideName} & ${groomName} Final Portrait`"
     ></div>
     <div class="final-overlay"></div>
 
@@ -32,7 +32,7 @@ withDefaults(defineProps<Props>(), {
       <h2 class="final-names">{{ brideName }} & {{ groomName }}</h2>
 
       <p class="final-tagline">
-        We would love to celebrate with you.
+        WE'D LOVE TO HAVE YOU WITH US
       </p>
 
       <p class="final-date">{{ eventDate }}</p>
@@ -72,8 +72,8 @@ withDefaults(defineProps<Props>(), {
   width: 100%;
   height: 100%;
   background-size: cover;
-  background-position: center center;
-  filter: brightness(0.65) contrast(1.05);
+  background-position: center 25%;
+  filter: brightness(0.62) contrast(1.08);
 }
 
 .final-overlay {
@@ -81,7 +81,7 @@ withDefaults(defineProps<Props>(), {
   inset: 0;
   background: radial-gradient(
     circle at center,
-    rgba(22, 34, 28, 0.6) 0%,
+    rgba(22, 34, 28, 0.5) 0%,
     rgba(28, 28, 26, 0.88) 85%
   );
   z-index: 1;
@@ -105,30 +105,31 @@ withDefaults(defineProps<Props>(), {
 
 .final-names {
   font-family: var(--font-display);
-  font-size: clamp(2.8rem, 6.5vw, 5rem);
+  font-size: clamp(2.8rem, 6.5vw, 5.5rem);
   font-weight: 400;
   letter-spacing: 0.08em;
   color: var(--ivory);
   margin-bottom: 1.25rem;
   line-height: 1.1;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 4px 25px rgba(0, 0, 0, 0.65);
 }
 
 .final-tagline {
   font-family: var(--font-display);
-  font-size: clamp(1.2rem, 2.2vw, 1.7rem);
+  font-size: clamp(1.2rem, 2.4vw, 1.85rem);
   font-style: italic;
   font-weight: 400;
   color: var(--gold-pale);
   margin-bottom: 1.5rem;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
 }
 
 .final-date {
   font-family: var(--font-body);
   font-size: 0.88rem;
   letter-spacing: 0.28em;
-  color: rgba(248, 246, 241, 0.75);
+  color: rgba(248, 246, 241, 0.85);
   text-transform: uppercase;
   margin-bottom: 2.25rem;
 }
@@ -147,7 +148,7 @@ withDefaults(defineProps<Props>(), {
 .final-footnote {
   font-family: var(--font-body);
   font-size: 0.85rem;
-  color: rgba(248, 246, 241, 0.6);
+  color: rgba(248, 246, 241, 0.65);
   line-height: 1.6;
   max-width: 440px;
 }
