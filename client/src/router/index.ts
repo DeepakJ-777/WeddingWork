@@ -1,12 +1,27 @@
 import { createRouter, createWebHistory } from "vue-router";
+import BetrothalInviteView from "../views/BetrothalInviteView.vue";
 import Dashboard from "../pages/Dashboard.vue";
 import WeddingEditor from "../pages/WeddingEditor.vue";
-import Invitation from "../pages/Invitation.vue";
 
 const routes = [
   {
     path: "/",
-    redirect: "/w/rahul-ananya",
+    redirect: "/invite/divya-john-betrothal",
+  },
+  {
+    path: "/invite/divya-john-betrothal",
+    name: "BetrothalInvite",
+    component: BetrothalInviteView,
+  },
+  {
+    path: "/invite/:slug",
+    name: "InviteSlug",
+    component: BetrothalInviteView,
+  },
+  {
+    path: "/w/:slug",
+    name: "LegacyInviteSlug",
+    component: BetrothalInviteView,
   },
   {
     path: "/dashboard",
@@ -22,12 +37,6 @@ const routes = [
     path: "/dashboard/wedding/:id",
     name: "EditWedding",
     component: WeddingEditor,
-    props: true,
-  },
-  {
-    path: "/w/:slug",
-    name: "Invitation",
-    component: Invitation,
     props: true,
   },
 ];

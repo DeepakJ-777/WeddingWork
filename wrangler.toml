@@ -6,8 +6,9 @@ compatibility_flags = ["nodejs_compat"]
 [assets]
 directory = "./client/dist"
 binding = "ASSETS"
+run_worker_first = true
 
 # Environment variables bound to worker
-# Sensitive secrets (DATABASE_URL, BETTER_AUTH_SECRET, GOOGLE_CLIENT_SECRET) should be set via `wrangler secret put <KEY>`
+# Sensitive secrets (DATABASE_URL, BETTER_AUTH_SECRET, GOOGLE_CLIENT_SECRET) should be set via `npx wrangler secret put <KEY>`
 [vars]
 ENVIRONMENT = "production"
