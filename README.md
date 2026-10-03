@@ -1,4 +1,4 @@
-# 💍 Dynamic Wedding Invitation Platform
+# Dynamic Wedding Invitation Platform
 
 A modern digital wedding invitation platform built with the **Eventify Stack**:
 - **Frontend**: Vue 3 (Vite + TypeScript + Vue Router)
@@ -9,7 +9,7 @@ A modern digital wedding invitation platform built with the **Eventify Stack**:
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
 Wedding/
