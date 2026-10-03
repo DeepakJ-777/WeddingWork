@@ -27,7 +27,7 @@ const invitationConfig = computed(() => {
       // Refined intimate couple portrait for Betrothal
       heroImage: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=2400&q=85",
       introQuote: "Two lives, two souls, united in love and promise before God.",
-      introNote: "We request the honor of your presence as we celebrate our Betrothal & Ring Exchange ceremony.",
+      introNote: "We request the honor of your presence as we celebrate our Betrothal & ceremony.",
     };
   }
 

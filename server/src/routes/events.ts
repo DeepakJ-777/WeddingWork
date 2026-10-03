@@ -1,7 +1,7 @@
 import { Router, Response } from "express";
 import { getDb, db } from "../db/index.js";
-import { events } from "../db/schema.js";
-import { eq, asc } from "drizzle-orm";
+import { events, rsvps } from "../db/schema.js";
+import { eq, asc, desc } from "drizzle-orm";
 import { requireAuth, AuthenticatedRequest } from "../middleware/auth.js";
 import crypto from "node:crypto";
 
@@ -114,3 +114,103 @@ eventsRouter.delete("/:eventId", requireAuth, async (req: AuthenticatedRequest, 
     return res.status(500).json({ error: "Failed to delete event" });
   }
 });
+
+// ── RSVP ENDPOINTS ────────────────────────────────────────────
+const inMemoryRsvps: any[] = [];
+
+// Submit RSVP (Public guest endpoint)
+eventsRouter.post("/rsvp", async (req, res: Response) => {
+  const { name, attendance, add_guest, addGuests, notes } = req.body;
+
+  if (!name || !name.trim()) {
+    return res.status(400).json({ error: "Guest name is required" });
+  }
+
+  const attendanceStatus = attendance === "no" ? "no" : "yes";
+  const guestCount = attendanceStatus === "yes" ? Number(addGuests ?? add_guest ?? 0) : 0;
+
+  const newRsvp = {
+    id: crypto.randomUUID(),
+    name: String(name).trim(),
+    attendance: attendanceStatus,
+    addGuests: isNaN(guestCount) || guestCount < 0 ? 0 : guestCount,
+    notes: notes ? String(notes).trim() : null,
+    createdAt: new Date(),
+  };
+
+  if (!db) {
+    inMemoryRsvps.unshift(newRsvp);
+    return res.status(201).json({ success: true, rsvp: newRsvp });
+  }
+
+  try {
+    const [created] = await getDb().insert(rsvps).values(newRsvp).returning();
+    return res.status(201).json({ success: true, rsvp: created });
+  } catch (err) {
+    console.error("Database insert error for RSVP, falling back to memory:", err);
+    inMemoryRsvps.unshift(newRsvp);
+    return res.status(201).json({ success: true, rsvp: newRsvp });
+  }
+});
+
+// Get all RSVPs and summary stats (Admin view)
+eventsRouter.get("/rsvps", async (_req, res: Response) => {
+  try {
+    let list: any[] = [];
+
+    if (!db) {
+      list = [...inMemoryRsvps];
+    } else {
+      try {
+        list = await getDb().select().from(rsvps).orderBy(desc(rsvps.createdAt));
+      } catch (dbErr) {
+        console.warn("DB query for RSVPs failed, returning memory list:", dbErr);
+        list = [...inMemoryRsvps];
+      }
+    }
+
+    const attendingList = list.filter((r) => r.attendance === "yes");
+    const declinedList = list.filter((r) => r.attendance === "no");
+
+    const attendingCount = attendingList.length;
+    const additionalGuestsCount = attendingList.reduce((acc, curr) => acc + (Number(curr.addGuests) || 0), 0);
+    const totalHeadcount = attendingCount + additionalGuestsCount;
+    const declinedCount = declinedList.length;
+    const totalResponses = list.length;
+
+    return res.json({
+      summary: {
+        totalResponses,
+        attendingCount,
+        additionalGuestsCount,
+        totalHeadcount,
+        declinedCount,
+      },
+      rsvps: list,
+    });
+  } catch (err: any) {
+    console.error("Error fetching RSVPs:", err);
+    return res.status(500).json({ error: "Failed to fetch RSVPs" });
+  }
+});
+
+// Delete an RSVP entry (Admin management)
+eventsRouter.delete("/rsvps/:id", async (req, res: Response) => {
+  const id = String(req.params.id);
+
+  const memIdx = inMemoryRsvps.findIndex((r) => r.id === id);
+  if (memIdx !== -1) {
+    inMemoryRsvps.splice(memIdx, 1);
+  }
+
+  if (db) {
+    try {
+      await getDb().delete(rsvps).where(eq(rsvps.id, id));
+    } catch (err) {
+      console.error("Error deleting RSVP from DB:", err);
+    }
+  }
+
+  return res.json({ success: true, message: "RSVP removed" });
+});
+

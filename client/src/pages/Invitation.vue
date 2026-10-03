@@ -2,6 +2,33 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 
+// ── Navbar ────────────────────────────────────────────────
+const navScrolled = ref(false);
+const activeSection = ref('');
+
+function scrollToSection(id: string) {
+  const el = document.getElementById(id);
+  if (el) {
+    const offset = 72;
+    const top = el.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
+}
+
+function onScroll() {
+  navScrolled.value = window.scrollY > 60;
+  const sections = ['rsvp', 'pictures', 'location'];
+  let current = '';
+  for (const id of sections) {
+    const el = document.getElementById(id);
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      if (rect.top <= 100) current = id;
+    }
+  }
+  activeSection.value = current;
+}
+
 const route = useRoute();
 const slug = (route.params.slug as string) || "rahul-ananya";
 
@@ -126,10 +153,12 @@ function downloadIcs(event: any) {
 
 onMounted(() => {
   fetchWedding();
+  window.addEventListener('scroll', onScroll, { passive: true });
 });
 
 onUnmounted(() => {
   if (timer) clearInterval(timer);
+  window.removeEventListener('scroll', onScroll);
 });
 </script>
 
@@ -146,6 +175,43 @@ onUnmounted(() => {
   </div>
 
   <div v-else class="invitation-page">
+
+    <!-- ── STICKY NAV BAR ──────────────────────────────── -->
+    <nav class="invite-nav" :class="{ 'nav-scrolled': navScrolled }">
+      <div class="nav-inner">
+        <span class="nav-brand">{{ data.wedding.brideName }} &amp; {{ data.wedding.groomName }}</span>
+        <ul class="nav-links">
+          <li>
+            <button
+              class="nav-link"
+              :class="{ active: activeSection === 'rsvp' }"
+              @click="scrollToSection('rsvp')"
+            >
+              <span class="nav-icon"></span> RSVP
+            </button>
+          </li>
+          <li>
+            <button
+              class="nav-link"
+              :class="{ active: activeSection === 'pictures' }"
+              @click="scrollToSection('pictures')"
+            >
+              <span class="nav-icon"></span> Pictures
+            </button>
+          </li>
+          <li>
+            <button
+              class="nav-link"
+              :class="{ active: activeSection === 'location' }"
+              @click="scrollToSection('location')"
+            >
+              <span class="nav-icon"></span> Location
+            </button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
     <!-- HERO SECTION -->
     <header class="hero-section" :style="{ backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url(${data.wedding.coverImage})` }">
       <div class="hero-content">
@@ -217,8 +283,8 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <!-- EVENTS SECTION -->
-    <section v-if="data.events && data.events.length > 0" class="section events-section">
+    <!-- EVENTS SECTION (Location anchor) -->
+    <section id="location" v-if="data.events && data.events.length > 0" class="section events-section">
       <h2 class="section-title">Celebration Events</h2>
       <div class="events-grid">
         <div v-for="evt in data.events" :key="evt.id" class="event-card">
@@ -246,14 +312,35 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <!-- GALLERY SECTION -->
-    <section v-if="data.gallery && data.gallery.length > 0" class="section gallery-section">
+    <!-- GALLERY SECTION (Pictures anchor) -->
+    <section id="pictures" v-if="data.gallery && data.gallery.length > 0" class="section gallery-section">
       <h2 class="section-title">Captured Moments</h2>
       <div class="gallery-grid">
         <div v-for="photo in data.gallery" :key="photo.id" class="gallery-item">
           <img :src="photo.imageUrl" :alt="photo.caption || 'Couple Moment'" />
           <div v-if="photo.caption" class="gallery-caption">{{ photo.caption }}</div>
         </div>
+      </div>
+    </section>
+
+    <!-- RSVP SECTION -->
+    <section id="rsvp" class="section rsvp-section">
+      <div class="rsvp-card">
+        <span class="rsvp-eyebrow">You're Invited</span>
+        <h2 class="rsvp-heading">Will You Be Joining Us?</h2>
+        <p class="rsvp-desc">
+          We'd be overjoyed to celebrate this special day with you.
+          Please let us know if you'll be attending by submitting your RSVP below.
+        </p>
+        <div class="rsvp-actions">
+          <router-link :to="`/invite/${$route.params.slug}/rsvp`" class="rsvp-btn rsvp-btn-yes">
+            ✓ &nbsp;YES, I'LL BE THERE
+          </router-link>
+          <router-link :to="`/invite/${$route.params.slug}/rsvp`" class="rsvp-btn rsvp-btn-no">
+            Unable to Attend
+          </router-link>
+        </div>
+        <p class="rsvp-note">Kindly respond by 20 December 2026</p>
       </div>
     </section>
 
@@ -275,6 +362,185 @@ onUnmounted(() => {
   background: #faf7f2;
 }
 
+/* ── Sticky Nav Bar ─────────────────────────────────────── */
+.invite-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(250, 247, 242, 0.2);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(220, 197, 152, 0.25);
+  transition: background 0.35s ease, box-shadow 0.35s ease;
+  padding: 0.85rem 1.5rem;
+}
+
+.invite-nav.nav-scrolled {
+  background: rgba(250, 247, 242, 0.92);
+  box-shadow: 0 4px 24px rgba(44, 37, 35, 0.08);
+  border-bottom-color: rgba(220, 197, 152, 0.55);
+}
+
+.nav-inner {
+  max-width: 1050px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.nav-brand {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2c2523;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1rem;
+  border-radius: 100px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #5d5350;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+
+.nav-link:hover {
+  color: #8b263e;
+  background: rgba(139, 38, 62, 0.07);
+  border-color: rgba(139, 38, 62, 0.18);
+}
+
+.nav-link.active {
+  color: #8b263e;
+  background: rgba(139, 38, 62, 0.1);
+  border-color: rgba(139, 38, 62, 0.3);
+}
+
+.nav-icon {
+  font-size: 0.95rem;
+}
+
+/* ── RSVP Section ─────────────────────────────────────── */
+.rsvp-section {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.05);
+  padding: 4rem 1.5rem !important;
+}
+
+.rsvp-card {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.rsvp-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #c5a059;
+}
+
+.rsvp-heading {
+  font-family: var(--font-serif);
+  font-size: 2.25rem;
+  color: #8b263e;
+  margin: 0;
+  letter-spacing: 0.03em;
+  text-align: center;
+}
+
+.rsvp-desc {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: #5d5350;
+  max-width: 480px;
+  text-align: center;
+  font-style: italic;
+}
+
+.rsvp-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.rsvp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 2rem;
+  border-radius: 100px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.rsvp-btn-yes {
+  background: #8b263e;
+  color: #ffffff;
+  box-shadow: 0 6px 20px rgba(139, 38, 62, 0.35);
+}
+
+.rsvp-btn-yes:hover {
+  background: #6d1e30;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(139, 38, 62, 0.45);
+}
+
+.rsvp-btn-no {
+  background: transparent;
+  color: #8b263e;
+  border: 1.5px solid #c5a059;
+}
+
+.rsvp-btn-no:hover {
+  background: #faf7f2;
+  border-color: #8b263e;
+  transform: translateY(-2px);
+}
+
+.rsvp-note {
+  font-size: 0.78rem;
+  color: #9a9088;
+  letter-spacing: 0.08em;
+  margin-top: 0.25rem;
+}
+
 .hero-section {
   min-height: 90vh;
   background-size: cover;
@@ -285,6 +551,7 @@ onUnmounted(() => {
   text-align: center;
   color: #ffffff;
   padding: 3rem 1.5rem;
+  padding-top: 5rem; /* account for fixed nav */
 }
 
 .hero-content {

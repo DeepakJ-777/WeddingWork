@@ -98,3 +98,13 @@ export const gallery = pgTable("gallery", {
   sortOrder: integer("sort_order").notNull().default(0),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+export const rsvps = pgTable("rsvps", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  attendance: varchar("attendance", { length: 10 }).notNull(), // 'yes' | 'no'
+  addGuests: integer("add_guests").notNull().default(0),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+

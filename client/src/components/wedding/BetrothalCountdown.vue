@@ -11,8 +11,8 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  targetDate: "2026-12-18",
-  targetTime: "18:00",
+  targetDate: "2026-12-27",
+  targetTime: "12:15",
 });
 
 const sectionRef = ref<HTMLElement | null>(null);
@@ -107,7 +107,7 @@ onUnmounted(() => {
 <template>
   <section ref="sectionRef" class="countdown-section">
     <!-- Background Watermark Geometry -->
-    <div class="countdown-watermark" aria-hidden="true">18·12·2026</div>
+    <div class="countdown-watermark" aria-hidden="true">27·12·2026</div>
 
     <div class="countdown-container">
       <!-- Cross / Star Accent -->
@@ -159,7 +159,7 @@ onUnmounted(() => {
       <!-- Date Badge -->
       <div class="countdown-date-badge">
         <div class="badge-line"></div>
-        <p class="badge-date">18 DECEMBER 2026 · 6:00 PM</p>
+        <p class="badge-date">27 DECEMBER 2026 · 12:15 PM</p>
         <div class="badge-line"></div>
       </div>
     </div>

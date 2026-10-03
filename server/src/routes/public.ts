@@ -25,7 +25,7 @@ const DEMO_WEDDING = {
       name: "Engagement Ceremony",
       description: "An intimate gathering of family and close friends to exchange rings and celebrate the union.",
       date: "2026-12-18",
-      startTime: "06:00 PM",
+      startTime: "12:15 PM",
       endTime: "09:00 PM",
       venue: "St. Mary's Hall",
       address: "Changanassery, Kerala, India",

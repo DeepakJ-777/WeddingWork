@@ -5,6 +5,7 @@ import confetti from "canvas-confetti";
 interface RSVPPayload {
   name: string;
   attendance: "yes" | "no";
+  addGuests: number;
   add_guest: number;
 }
 
@@ -41,13 +42,13 @@ async function handleRSVP() {
   const payload: RSVPPayload = {
     name: name.value.trim(),
     attendance: attendance.value,
+    addGuests: attendance.value === "yes" ? addGuests.value : 0,
     add_guest: attendance.value === "yes" ? addGuests.value : 0,
   };
 
   try {
-    // Attempt sending to backend API if available
     try {
-      await fetch("/api/events/rsvp", {
+      await fetch("/api/guest/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -168,7 +169,7 @@ async function handleRSVP() {
         <div class="confirm-star">✦</div>
         <h3 class="confirm-title">THANK YOU</h3>
         <p class="confirm-message">
-          We can’t wait to celebrate with you on <strong>18 December 2026</strong>.
+          We can’t wait to celebrate with you on <strong>27 December 2026</strong>.
         </p>
         <div class="confirm-divider"></div>
         <h4 class="couple-signature">DIVYA & JOHN</h4>

@@ -9,53 +9,26 @@ const sectionRef = ref<HTMLElement | null>(null);
 let ctx: gsap.Context | null = null;
 
 const eventData = {
-  title: "THE BETROTHAL & RING EXCHANGE",
-  day: "18",
+  title: "THE BETROTHAL",
+  day: "27",
   month: "DECEMBER",
   year: "2026",
-  time: "6:00 PM IST",
-  venue: "St. Mary's Forane Church",
-  hall: "St. Mary's Golden Jubilee Auditorium",
-  address: "Changanassery, Kottayam, Kerala 686101",
-  mapsUrl: "https://maps.google.com/?q=St+Marys+Forane+Church+Changanassery",
-  venuePhoto: "https://images.unsplash.com/photo-1548625361-197e930f3c80?auto=format&fit=crop&w=1200&q=80",
+  time: "12:15 PM IST",
+  venue: "St. Mary's Cathedral, Changanacherry",
+  subVenue: "Followed by Reception in the Parish Hall",
+  address: "Changanacherry, Kottayam, Kerala 686101",
+  mapsUrl: "https://maps.app.goo.gl/xvjBtpkPHBXFjohz8",
+  venuePhoto: "/photos/st-marys-church-opt.webp",
 };
 
-// Generate Google Calendar Link
+// Generate Google Calendar Link (12:15 PM IST is 06:45 UTC)
 function getGoogleCalendarUrl() {
-  const title = encodeURIComponent("Divya & John — Betrothal & Ring Exchange");
+  const title = encodeURIComponent("Divya & John — Betrothal");
   const details = encodeURIComponent(
-    "With joyful hearts, we invite you to celebrate the Betrothal Ceremony of Divya and John at St. Mary's Forane Church, Changanassery."
+    "With joyful hearts, we invite you to celebrate the Betrothal Ceremony of Divya and John at St. Mary's Cathedral, Changanacherry"
   );
   const location = encodeURIComponent(`${eventData.venue}, ${eventData.address}`);
-  // Date format: 20261218T123000Z to 20261218T163000Z (6:00 PM IST is 12:30 UTC)
-  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=20261218T123000Z/20261218T163000Z`;
-}
-
-// Download .ics file
-function downloadIcs() {
-  const icsContent = [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//DivyaJohnWedding//BetrothalInvite//EN",
-    "BEGIN:VEVENT",
-    "SUMMARY:Divya & John — Betrothal Ceremony",
-    `DESCRIPTION:We request the honour of your presence at the Betrothal of Divya & John.`,
-    `LOCATION:${eventData.venue}, ${eventData.address}`,
-    "DTSTART:20261218T123000Z",
-    "DTEND:20261218T163000Z",
-    "END:VEVENT",
-    "END:VCALENDAR",
-  ].join("\r\n");
-
-  const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
-  const url = window.URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.setAttribute("download", "Divya_John_Betrothal.ics");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=20261227T064500Z/20261227T104500Z`;
 }
 
 onMounted(() => {
@@ -117,14 +90,14 @@ onUnmounted(() => {
             </div>
 
             <div class="time-callout">
-              <span class="callout-icon">⏰</span>
+              <span class="callout-icon"></span>
               <span class="callout-val">{{ eventData.time }}</span>
             </div>
 
             <div class="venue-block">
               <h3 class="venue-name">{{ eventData.venue }}</h3>
-              <p class="venue-hall">{{ eventData.hall }}</p>
-              <p class="venue-address">📍 {{ eventData.address }}</p>
+              <p class="venue-sub">{{ eventData.subVenue }}</p>
+              <p class="venue-address"> {{ eventData.address }}</p>
             </div>
 
             <div class="action-buttons-group">
@@ -146,10 +119,6 @@ onUnmounted(() => {
               >
                 <span>+ GOOGLE CALENDAR</span>
               </a>
-
-              <button class="btn-action btn-subtle" @click="downloadIcs">
-                <span>DOWNLOAD .ICS</span>
-              </button>
             </div>
           </div>
 
@@ -163,8 +132,8 @@ onUnmounted(() => {
                 loading="lazy"
               />
               <div class="venue-caption-plate">
-                <span class="caption-label">HISTORIC FORANE CHURCH</span>
-                <span class="caption-city">CHANGANASSERY</span>
+                <span class="caption-label"></span>
+                <span class="caption-city">ST Marys Cathedral,CHANGANACHERRY</span>
               </div>
             </div>
           </div>
@@ -232,8 +201,8 @@ onUnmounted(() => {
 
 .card-grid {
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: 4rem;
+  grid-template-columns: 1.45fr 1fr;
+  gap: clamp(2rem, 4vw, 3.5rem);
   align-items: center;
 }
 
@@ -304,19 +273,19 @@ onUnmounted(() => {
 
 .venue-name {
   font-family: var(--font-display);
-  font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+  font-size: clamp(1.5rem, 2.2vw, 2.1rem);
   font-weight: 500;
   color: var(--charcoal);
-  line-height: 1.25;
-  margin-bottom: 0.4rem;
+  line-height: 1.3;
+  margin-bottom: 0.35rem;
 }
 
-.venue-hall {
+.venue-sub {
   font-family: var(--font-body);
-  font-size: 0.95rem;
-  font-weight: 500;
+  font-size: 0.92rem;
+  font-weight: 600;
   color: var(--deep-green);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
 }
 
 .venue-address {
@@ -337,7 +306,7 @@ onUnmounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.4rem;
+  padding: 0.75rem 1.35rem;
   border-radius: 8px;
   font-family: var(--font-body);
   font-size: 0.78rem;
@@ -384,39 +353,51 @@ onUnmounted(() => {
   border-color: var(--border-subtle);
 }
 
-/* Visual Right Column */
+/* Visual Right Column (Small, elegant cameo framing for st marys church) */
+.card-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
 .venue-frame {
   position: relative;
   width: 100%;
-  height: 440px;
+  max-width: 270px;
+  aspect-ratio: 4 / 5;
+  height: auto;
   border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 12px 35px rgba(28, 28, 26, 0.08);
+  box-shadow: 0 12px 35px rgba(28, 28, 26, 0.1);
+  border: 1px solid var(--border-gold);
+  background-color: var(--charcoal);
 }
 
 .venue-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 25%;
   display: block;
 }
 
 .venue-caption-plate {
   position: absolute;
-  bottom: 1.25rem;
-  left: 1.25rem;
-  right: 1.25rem;
-  background: rgba(28, 28, 26, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  padding: 0.85rem 1.25rem;
-  border-radius: 8px;
+  bottom: 0.85rem;
+  left: 0.85rem;
+  right: 0.85rem;
+  background: rgba(28, 28, 26, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 0.6rem 0.95rem;
+  border-radius: 6px;
   display: flex;
   justify-content: space-between;
   color: var(--white);
   font-family: var(--font-body);
-  font-size: 0.68rem;
-  letter-spacing: 0.18em;
+  font-size: 0.64rem;
+  letter-spacing: 0.16em;
 }
 
 .caption-label {
@@ -432,7 +413,8 @@ onUnmounted(() => {
   }
 
   .venue-frame {
-    height: 300px;
+    max-width: 240px;
+    margin: 0 auto;
   }
 }
 </style>

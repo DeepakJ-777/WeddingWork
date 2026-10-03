@@ -85,7 +85,6 @@ onUnmounted(() => {
           loading="lazy"
         />
         <div class="frame-caption-bar">
-          <span class="caption-tag">CHAPTER I</span>
           <span class="caption-text">DIVYA & JOHN</span>
         </div>
       </div>
@@ -100,7 +99,7 @@ onUnmounted(() => {
             <img
               src="/photos/beachrunning-opt.webp"
               alt="Moments by the shore"
-              class="flow-img parallax-media"
+              class="flow-img beachrunning-img parallax-media"
               data-speed="0.08"
               loading="lazy"
             />
@@ -111,7 +110,7 @@ onUnmounted(() => {
         </div>
 
         <div class="flow-col col-right offset-down">
-          <div class="flow-frame frame-landscape">
+          <div class="flow-frame frame-portrait">
             <img
               src="/photos/sareeclose-opt.webp"
               alt="Traditional Grace"
@@ -176,9 +175,9 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <!-- ROW 4: [PHOTO] (Centered Final Narrative Portrait) -->
+      <!-- ROW 4: [PHOTO] (Centered 3:4 Portrait Narrative) -->
       <div class="flow-row row-single row-last-feature">
-        <div class="flow-frame frame-centered-medium">
+        <div class="flow-frame frame-portrait-ratio">
           <img
             src="/photos/image-opt.webp"
             alt="Cherished times"
@@ -432,16 +431,22 @@ onUnmounted(() => {
   color: var(--gold-light);
 }
 
-/* Centered Medium Frame (Row 4) */
+.beachrunning-img {
+  object-position: 18% center;
+}
+
+/* Centered 3:4 Portrait Frame (Row 4 - image.png) */
 .row-last-feature {
   display: flex;
   justify-content: center;
 }
 
-.frame-centered-medium {
+.frame-portrait-ratio {
   width: 100%;
-  max-width: 680px;
-  height: clamp(340px, 45vh, 480px);
+  max-width: 440px;
+  aspect-ratio: 3 / 4;
+  height: auto;
+  margin: 0 auto;
 }
 
 /* Mobile */
@@ -455,8 +460,14 @@ onUnmounted(() => {
     transform: none;
   }
 
-  .frame-portrait, .frame-landscape, .frame-square, .frame-tall, .frame-wide, .frame-centered-medium {
-    height: 320px;
+  .frame-portrait, .frame-landscape, .frame-square, .frame-tall, .frame-wide {
+    height: 340px;
+  }
+
+  .frame-portrait-ratio {
+    max-width: 320px;
+    aspect-ratio: 3 / 4;
+    height: auto;
   }
 
   .wide-caption-overlay {

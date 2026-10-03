@@ -9,7 +9,7 @@ interface Props {
 withDefaults(defineProps<Props>(), {
   brideName: "DIVYA",
   groomName: "JOHN",
-  eventDate: "18 · 12 · 2026",
+  eventDate: "27 · 12 · 2026",
   finalImage: "/photos/final-opt.webp",
 });
 </script>
@@ -55,7 +55,9 @@ withDefaults(defineProps<Props>(), {
 <style scoped>
 .final-section {
   position: relative;
-  min-height: 85vh;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -72,7 +74,8 @@ withDefaults(defineProps<Props>(), {
   width: 100%;
   height: 100%;
   background-size: cover;
-  background-position: center 25%;
+  background-position: center 20%;
+  background-repeat: no-repeat;
   filter: brightness(0.62) contrast(1.08);
 }
 
