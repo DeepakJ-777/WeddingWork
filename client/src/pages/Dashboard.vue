@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from "vue";
 
-// ── PIN Auth ──────────────────────────────────────────────
+// ── PIN Auth (value lives in gitignored client/.env, injected at build time) ──
 const CORRECT_PIN = import.meta.env.VITE_DASHBOARD_PIN || "";
 const SESSION_KEY = "dj_admin_auth";
 
